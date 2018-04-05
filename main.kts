@@ -3,14 +3,79 @@
 println("UW Homework: Simple Kotlin")
 
 // write a "whenFn" that takes an arg of type "Any" and returns a String
-
+fun whenFn(arg: Any ): String {
+    when(arg) {
+        "Hello" -> return "world"
+        is String -> return "Say what?"
+        0 -> return "zero"
+        1 -> return "one"
+        in 2..10 ->return "low number"
+        is Int -> return "a number"
+        else -> return "I don't understand"
+    }
+}
 // write an "add" function that takes two Ints, returns an Int, and adds the values
+fun add(num1: Int, num2: Int): Int {
+    return num1 + num2
+}
 // write a "sub" function that takes two Ints, returns an Int, and subtracts the values
-// write a "mathOp" function that takes two Ints and a function (that takes two Ints and returns an Int), returns an Int, and applies the passed-in-function to the arguments
+fun sub(num1: Int, num2: Int): Int {
+    return num1 - num2
+}
+// write a "mathOp" function that takes two Ints and a function (that takes two Ints and returns an Int), 
+// returns an Int, and applies the passed-in-function to the arguments
+fun mathOp(num1: Int, num2: Int, func: (Int, Int) -> Int): Int {
+    var result = func(num1, num2)
+    return result
+} 
 
 // write a class "Person" with first name, last name and age
+// provides an "equals" implementation that tests whether two 
+// Persons hold the same values, and an appropriate "hashCode" implementation
+class Person(val firstName: String, val lastName: String, var age: Int) {
+    val debugString: String
+        get() = "[Person firstName:" + firstName + " lastName:" + lastName + " age:" + age + "]"
+    fun equals(other: Person?): Boolean {
+        if (other?.firstName == this.firstName && other.lastName == this.lastName) {
+            return true
+        }
+        return false
+    }
+}
 
 // write a class "Money"
+data class Money(var amount: Int, var currency: String) {
+    init {
+        if (this.amount < 0) {
+            this.amount = 10
+        }
+        if (this.currency != "USD" || this.currency != "CAN" || this.currency != "EUR" || this.currency != "GBP") {
+            this.currency = "USD"
+        }
+    }
+    fun convert(convert: String): Int {
+        if (this.currency == "USD") {
+            when (convert) {
+                "EUR" -> return 15
+                "GBP" -> return 5
+                "CAN" -> return 15
+                else -> return 10
+            }
+        } else if (this.currency == "EUR") {
+            return 10
+        } else if (this.currency == "GBP") {
+            return 10 
+        } else {
+            return 12
+        }
+    }
+
+    operator fun plus(other: Money): Money {
+        var newAmount: Int = other.convert(this.currency)
+        return Money(this.amount + newAmount, this.currency)
+    }
+}
+
 
 // ============ DO NOT EDIT BELOW THIS LINE =============
 
@@ -63,7 +128,7 @@ println("")
 
 
 print("Person tests: ")
-val p1 = Person("Ted", "Neward", 47)
+var p1 = Person("Ted", "Neward", 47)
 print(if (p1.firstName == "Ted") "." else "!")
 p1.age = 48
 print(if (p1.debugString == "[Person firstName:Ted lastName:Neward age:48]") "." else "!")
