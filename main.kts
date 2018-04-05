@@ -46,32 +46,37 @@ class Person(val firstName: String, val lastName: String, var age: Int) {
 // write a class "Money"
 data class Money(var amount: Int, var currency: String) {
     init {
-        if (this.amount < 0) {
+        if (amount < 0) {
             this.amount = 10
         }
-        if (this.currency != "USD" || this.currency != "CAN" || this.currency != "EUR" || this.currency != "GBP") {
-            this.currency = "USD"
+        if (currency == "USD" || currency == "CAN" || currency == "EUR" || currency == "GBP") {
+            this.currency = currency
         }
     }
-    fun convert(convert: String): Int {
+    fun convert(convert: String): Money {
+        var newAmount: Int
         if (this.currency == "USD") {
             when (convert) {
-                "EUR" -> return 15
-                "GBP" -> return 5
-                "CAN" -> return 15
-                else -> return 10
+                "EUR" -> newAmount = 15
+                "GBP" -> newAmount = 5
+                "CAN" -> newAmount = 15
+                else -> newAmount = 10
             }
         } else if (this.currency == "EUR") {
-            return 10
+            newAmount = 10
         } else if (this.currency == "GBP") {
-            return 10 
+            when (convert) {
+                "USD" -> newAmount = 10
+                else -> newAmount = 15
+            }
         } else {
-            return 12
+            newAmount = 12
         }
+        return Money(newAmount, convert)
     }
 
     operator fun plus(other: Money): Money {
-        var newAmount: Int = other.convert(this.currency)
+        var newAmount: Int = other.convert(this.currency).amount
         return Money(this.amount + newAmount, this.currency)
     }
 }
